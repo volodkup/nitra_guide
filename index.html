@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Nitra Student Guide</title>
+<title>Гід для студентів у Нітрі</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-  /* Colors follow the user's Telegram theme; fallbacks are used in a normal browser. */
   :root {
     --bg: var(--tg-theme-bg-color, #f6f7f4);
     --surface: var(--tg-theme-secondary-bg-color, #ffffff);
@@ -19,46 +18,36 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
-  body {
-    background: var(--bg); color: var(--text);
+  body { background: var(--bg); color: var(--text);
     font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
-  }
+    padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0); }
   main { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; }
-  h1 { font-size: 1.7rem; line-height: 1.15; margin: 4px 0 4px; letter-spacing: -0.02em; }
+  h1 { font-size: 1.7rem; line-height: 1.15; margin: 4px 0; letter-spacing: -0.02em; }
   .sub { color: var(--muted); margin: 0 0 18px; }
-
-  .search {
-    width: 100%; padding: 12px 14px; font: inherit; color: var(--text);
-    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
-  }
+  .search { width: 100%; padding: 12px 14px; font: inherit; color: var(--text);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
   .search:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
   .tabs { display: flex; gap: 8px; overflow-x: auto; padding: 14px 0 6px; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    flex: none; padding: 8px 14px; font: inherit; font-size: .92rem; cursor: pointer;
-    color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px;
-  }
+  .tab { flex: none; padding: 8px 14px; font: inherit; font-size: .92rem; cursor: pointer;
+    color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px; }
   .tab[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
-
   .list { margin-top: 10px; border-top: 1px solid var(--line); }
   .item { border-bottom: 1px solid var(--line); }
-  .head {
-    width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    padding: 16px 2px; background: none; border: 0; font: inherit; color: var(--text);
-    text-align: left; cursor: pointer;
-  }
+  .head { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 16px 2px; background: none; border: 0; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
   .head strong { font-weight: 600; }
   .head small { display: block; color: var(--muted); font-size: .85rem; font-weight: 400; margin-top: 2px; }
   .chev { flex: none; width: 10px; height: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
-          transform: rotate(45deg); transition: transform .2s; }
+    transform: rotate(45deg); transition: transform .2s; }
   .item.open .chev { transform: rotate(-135deg); }
   .body { display: none; padding: 0 2px 18px; }
   .item.open .body { display: block; }
-  .body ol { margin: 0 0 12px; padding-left: 20px; }
-  .body li { margin-bottom: 6px; }
+  .body ul, .body ol { margin: 0 0 12px; padding-left: 20px; }
+  .body li { margin-bottom: 7px; }
   .body a { color: var(--tg-theme-link-color, var(--accent)); }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+  .links a { padding: 8px 14px; border: 1px solid var(--accent); border-radius: 999px; text-decoration: none; font-size: .92rem; }
   .note { background: var(--surface); border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: .92rem; }
   .empty { color: var(--muted); padding: 24px 2px; }
   .foot { margin-top: 28px; color: var(--muted); font-size: .85rem; }
@@ -67,125 +56,177 @@
 </head>
 <body>
 <main>
-  <h1>Nitra student guide</h1>
-  <p class="sub">First steps for international students in Nitra.</p>
-
-  <input id="q" class="search" type="search" placeholder="Search: insurance, SIM, bus…" aria-label="Search the guide" autocomplete="off">
-  <div id="tabs" class="tabs" role="group" aria-label="Categories"></div>
+  <h1>Гід для студентів у Нітрі</h1>
+  <p class="sub">Практичні поради від студентів, які вже тут.</p>
+  <input id="q" class="search" type="search" placeholder="Пошук: страховка, SIM, банк…" aria-label="Пошук по гіду" autocomplete="off">
+  <div id="tabs" class="tabs" role="group" aria-label="Категорії"></div>
   <div id="list" class="list"></div>
-
-  <p class="foot">Made by a student for students. Found something outdated? Message the author in the chat.</p>
+  <p class="foot">Зібрано зі студентського гіду чату іноземців Нітри. Інформація від студентів може застаріти: перевіряй ціни й умови. Помітив помилку? Напиши автору в чат.</p>
 </main>
 
 <script>
-/* ============ CONTENT: edit only this part ============
-   Everything below is a DRAFT. Check every fact and link before publishing.
-   Each article: category, title, summary, steps (list), note (optional), link (optional). */
-const CATEGORIES = ["Arrival", "Money", "Phone & internet", "Getting around", "Housing"];
+/* ============ КОНТЕНТ: редагуй лише цю частину ============
+   Поля: cat, title, summary, items (список), ordered (true = нумерований),
+   note (необов'язково), links ([{t:"текст", u:"url"}], необов'язково). */
+const CATEGORIES = ["Гуртожитки", "Зв'язок", "Банки", "Додатки", "Транспорт", "Магазини", "Здоров'я", "Лайфхаки", "Спільноти"];
 
 const ARTICLES = [
-  { cat: "Arrival", title: "Register your stay",
-    summary: "Required for most non-EU students after arrival.",
-    steps: [
-      "Check on the official Slovak police website whether you must register and how soon.",
-      "Collect your documents: passport, proof of accommodation, proof of study.",
-      "Book or visit the foreign police office responsible for Nitra.",
-      "Keep a copy of every document you submit."
-    ],
-    note: "TODO: add the exact office address, opening hours and the deadline." },
+  { cat: "Гуртожитки", title: "Чати гуртожитків",
+    summary: "Тут швидко відповідають на побутові питання.",
+    items: ["Бернолака, Академіцька та Младость мають окремі чати."],
+    links: [{t:"Бернолака", u:"https://t.me/+qCgDzNLze5FhZjQ6"}, {t:"Академіцька", u:"https://t.me/+Tqi7rWBE7I40MDgy"}, {t:"Младость", u:"https://t.me/mladostnitra"}] },
 
-  { cat: "Arrival", title: "Health insurance",
-    summary: "Know what covers you before you need a doctor.",
-    steps: [
-      "EU students: take your EHIC card or proof of coverage from home.",
-      "Non-EU students: check with the university which insurance is accepted.",
-      "Save the insurer's phone number and the nearest hospital in your phone."
+  { cat: "Зв'язок", title: "Мобільні оператори",
+    summary: "Що обирають студенти і чому.",
+    items: [
+      "4ka: часто беруть першою. Мінуси: дорога, не всюди добре ловить, у застосунку не завжди виходить ввести ISIC для студентської знижки. Є тариф 15 € за 300 ГБ, але дзвінки й SMS платні.",
+      "Radosť: перший тиждень безкоштовно з безлімітом. Якщо це твій перший номер у Словаччині, знижка 50% на перший місяць. Хвалять покриття: 5G у місті, LTE майже всюди.",
+      "Orange Slovensko: один з найбільших, покриття по всій країні. Багато хто потім переходить на 4ka.",
+      "Slovak Telekom (T-Mobile): великий оператор, добрі швидкості й покриття.",
+      "Київстар у роумінгу: непоганий варіант за невеликі гроші. Одна студентка повернулась на нього, бо вийшло дешевше, а словацьку SIM залишила з балансом 2-3 €, щоб приходили повідомлення."
     ],
-    note: "TODO: add the insurer names students actually use and their prices." },
+    note: "Думки розходяться, тож порівняй актуальні тарифи перед покупкою." },
 
-  { cat: "Money", title: "Opening a bank account",
-    summary: "Useful for rent, SIM top-ups and avoiding fees.",
-    steps: [
-      "Compare two or three banks: fees, English support, student accounts.",
-      "Bring passport, proof of address and student confirmation.",
-      "Ask whether you can set up the mobile app in English."
+  { cat: "Банки", title: "Де відкрити рахунок",
+    summary: "Tatra banka і Slovenská sporiteľňa найпопулярніші.",
+    items: [
+      "Tatra banka: відділення в Mlyny на 2 поверсі (йди за вказівниками). Треба записатися на певний день, після цього відкриють рахунок і зроблять картку. За словами студентів, можна відкрити навіть без усіх офіційних документів.",
+      "Slovenská sporiteľňa: раніше за студентський рахунок давали бонус (2022 рік: 30 €, зараз нібито 40-50 €, не підтверджено). Для оформлення потрібні всі документи.",
+      "VÚB banka і 365.bank: серед іноземців непопулярні."
     ],
-    note: "TODO: add which banks have branches in Nitra and what students recommend." },
+    note: "Бонуси й умови змінюються. Уточнюй у банку." },
 
-  { cat: "Money", title: "Student discounts",
-    summary: "Where your student card saves money.",
-    steps: [
-      "Get your student card from the university as early as possible.",
-      "Ask for a student discount at transport, cinemas and museums."
+  { cat: "Додатки", title: "Для покупок і знижок",
+    summary: "Клубні картки й оголошення.",
+    items: [
+      "Lidl Plus, Tesco Clubcard, Billa Bonus, Kaufland: знижки в магазинах.",
+      "Bazoš і Bazar.sk: оголошення.",
+      "Alza, Nay.sk, Mall.sk: техніка й онлайн-магазини.",
+      "Pepco і Jysk: дешеві речі для дому.",
+      "McDonald's: купони й знижка 15% на каву."
     ] },
 
-  { cat: "Phone & internet", title: "Getting a SIM card",
-    summary: "Prepaid is the simplest option for the first months.",
-    steps: [
-      "Compare prepaid offers from the main Slovak operators.",
-      "Buy a SIM at an operator store or a shop; bring your passport.",
-      "Check data limits and whether roaming in the EU is included."
-    ],
-    note: "TODO: add current operators, prices and the best student plan." },
-
-  { cat: "Getting around", title: "City buses in Nitra",
-    summary: "How to pay and where to find the timetable.",
-    steps: [
-      "Find the city transport timetable and route map online.",
-      "Check where to buy tickets and whether a student pass exists.",
-      "Validate your ticket when you board."
-    ],
-    note: "TODO: add the transport company name, ticket prices and the app, if there is one." },
-
-  { cat: "Getting around", title: "Trips to Bratislava and Vienna",
-    summary: "Train and bus options from Nitra.",
-    steps: [
-      "Use a journey planner to compare train and bus times.",
-      "Look for student discounts on long-distance tickets.",
-      "Buy ahead online when the route is busy."
+  { cat: "Додатки", title: "Для подорожей і повсякденного життя",
+    summary: "Розклади, квитки, мапи.",
+    items: [
+      "CP: розклад автобусів і поїздів.",
+      "Ideme vlakom: квитки на потяги.",
+      "FlixBus: міжміські автобуси.",
+      "Moja 4ka: застосунок оператора 4ka.",
+      "Google Maps і Booking.com."
     ] },
 
-  { cat: "Housing", title: "Finding a room",
-    summary: "Dorm, shared flat or your own place.",
-    steps: [
-      "Ask the university about dorm applications and deadlines.",
-      "Check the student groups for room offers and flatmate searches.",
-      "Never pay a deposit before seeing the place and signing a contract."
+  { cat: "Транспорт", title: "Безкоштовний проїзд потягами",
+    summary: "Один із найкращих бонусів для студентів.",
+    ordered: true,
+    items: [
+      "Прийди на вокзал з ISIC і закордонним паспортом.",
+      "Скажи, що потрібен спеціальний документ (preukaz žiaka). Візьми з собою 0,50 €.",
+      "Зареєструйся в Ideme vlakom: ім'я, прізвище й номер цього документа.",
+      "Тепер квитки на будь-який поїзд по Словаччині безкоштовні або коштують близько 1 €."
+    ] },
+
+  { cat: "Транспорт", title: "Квитки й проїзний у місті",
+    summary: "Чи варто брати проїзний.",
+    items: [
+      "Квитки на потяги: CP та Ideme vlakom. Корисно мати обидва, вони працюють і для сусідніх країн.",
+      "Разовий квиток в автобусі в автоматі чи у водія: близько 0,75 € звичайний, 0,55 € студентський. У водія може бути 1 €.",
+      "Проїзний на місяць має сенс лише якщо їздиш щодня на далекі відстані.",
+      "Таксі: Bolt або місцеві служби."
+    ] },
+
+  { cat: "Магазини", title: "Де купувати продукти",
+    summary: "Дешевше й дорожче за відгуками студентів.",
+    items: [
+      "Рекомендують: Kaufland, Lidl, Tesco. У Tesco з клубною карткою можна суттєво економити (були знижки 7-10 € на покупку від 20 €).",
+      "Дорого: Billa, Coop (Jednota), Nitrazdroj. Vkup іноді дорогий, але бувають знижки.",
+      "Для дому й кухні: Pepco, Action, Tedi (Tedi особливо хвалять, у Максі біля Obi)."
     ],
-    note: "TODO: add dorm names, prices and typical rent in Nitra." }
+    note: "Думки завжди розходяться, ти знайдеш свій улюблений магазин." },
+
+  { cat: "Здоров'я", title: "Страховка для студента",
+    summary: "Що потрібно для ВНЖ і де оформлюють.",
+    items: [
+      "За словами студентів, мінімальне покриття становить щонайменше 30 000 €. Зберігай поліс і на папері, і в електронному вигляді.",
+      "Громадянин третьої країни має мати медстраховку вже при перетині кордону ЄС.",
+      "Після отримання картки ВНЖ є лише три робочі дні, щоб оформити дійсну студентську страховку (станом на 05.2025).",
+      "Шукай: súkromné poistenie na Slovensku pre študentov.",
+      "VšZP (державна) і Dôvera здебільшого студентів не оформлюють.",
+      "Union: приватна, від 40 € на місяць.",
+      "AXA Assistance: Komplexná (близько 550 €/рік) і Neodkladná (невідкладна допомога, 220-300 €/рік)."
+    ],
+    note: "Деякі студенти скаржаться на страховки, тому уважно читай умови. Актуальні вимоги перевір на офіційних сайтах." },
+
+  { cat: "Здоров'я", title: "Стоматолог",
+    summary: "Лікар, якого рекомендують студенти.",
+    items: ["Студенти радять конкретного стоматолога, посилання нижче."],
+    links: [{t:"Відкрити Facebook", u:"https://www.facebook.com/share/16ssuojs2h/"}] },
+
+  { cat: "Лайфхаки", title: "Як вижити студентові з маленьким бюджетом",
+    summary: "Поради від старших студентів.",
+    items: [
+      "Їж вівсянку: дешево, можна і солону, і з фруктами.",
+      "Скупляйся разом із кимось і готуйте вдвох.",
+      "Тримай кімнату в чистоті, прибирай за собою, слідкуй за витратами.",
+      "Навчись готувати прості страви (м'ясо на сковороді, макарони).",
+      "Не бійся питати, якщо чогось не знаєш: майже скрізь допоможуть.",
+      "Знайомся з людьми, ходи гуляти, тренуй словацьку, не замикайся в собі."
+    ] },
+
+  { cat: "Лайфхаки", title: "Де швидко й недорого поїсти",
+    summary: "Фудкорти й азійська кухня.",
+    items: [
+      "Panda у N-Centro: великі порції за невелику ціну.",
+      "Ресторани азійської кухні в Mlyny: приблизно 5 €."
+    ] },
+
+  { cat: "Спільноти", title: "Клуби та спільноти Нітри",
+    summary: "Де знайти своїх.",
+    items: [
+      "Читацький клуб «Шелест»: раз на місяць обговорюють обрану книгу.",
+      "Літературний клуб «Душа»: поезія, проза, воркшопи, літературні вечори.",
+      "ESN (Erasmus Student Network): щосеместру приїжджають іноземці, події відкриті для всіх.",
+      "Музиканти й локальні гурти: Second to Loss, 117-я, Bugurt, ВНЖ, NaRys.",
+      "Спортик: футбол, волейбол (100+ людей), баскетбол (40+ людей). Є групи й активні збори.",
+      "Mareena: волонтерська організація, допомагає іноземцям адаптуватися. Приймає українців."
+    ],
+    note: "Щоб додати свою спільноту або дізнатись деталі, пиши автору гіду в чат." }
 ];
-/* ============ END OF CONTENT ============ */
+/* ============ КІНЕЦЬ КОНТЕНТУ ============ */
 
 const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
 const $ = id => document.getElementById(id);
-let activeCat = "All", query = "";
+const ALL = "Усе";
+let activeCat = ALL, query = "";
 
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 
 function renderTabs() {
-  $("tabs").innerHTML = ["All", ...CATEGORIES].map(c =>
+  $("tabs").innerHTML = [ALL, ...CATEGORIES].map(c =>
     `<button class="tab" data-cat="${esc(c)}" aria-pressed="${c === activeCat}">${esc(c)}</button>`).join("");
 }
 
 function renderList() {
   const q = query.trim().toLowerCase();
-  const items = ARTICLES.filter(a =>
-    (activeCat === "All" || a.cat === activeCat) &&
-    (!q || (a.title + " " + a.summary + " " + a.steps.join(" ")).toLowerCase().includes(q)));
-  $("list").innerHTML = items.length ? items.map((a, i) => `
-    <div class="item" data-i="${i}">
+  const list = ARTICLES.filter(a =>
+    (activeCat === ALL || a.cat === activeCat) &&
+    (!q || (a.title + " " + a.summary + " " + a.items.join(" ")).toLowerCase().includes(q)));
+  $("list").innerHTML = list.length ? list.map(a => {
+    const tag = a.ordered ? "ol" : "ul";
+    return `
+    <div class="item">
       <button class="head" aria-expanded="false">
         <span><strong>${esc(a.title)}</strong><small>${esc(a.summary)}</small></span>
         <span class="chev" aria-hidden="true"></span>
       </button>
       <div class="body">
-        <ol>${a.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
+        <${tag}>${a.items.map(s => `<li>${esc(s)}</li>`).join("")}</${tag}>
+        ${a.links ? `<div class="links">${a.links.map(l => `<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div>` : ""}
         ${a.note ? `<div class="note">${esc(a.note)}</div>` : ""}
-        ${a.link ? `<p><a href="${esc(a.link)}" target="_blank" rel="noopener">Official page</a></p>` : ""}
       </div>
-    </div>`).join("") : `<p class="empty">Nothing found for “${esc(query)}”. Try another word or pick All.</p>`;
+    </div>`; }).join("") : `<p class="empty">Нічого не знайдено за запитом «${esc(query)}». Спробуй інше слово або обери «${ALL}».</p>`;
 }
 
 $("tabs").addEventListener("click", e => {
@@ -195,7 +236,7 @@ $("tabs").addEventListener("click", e => {
 $("q").addEventListener("input", e => { query = e.target.value; renderList(); });
 $("list").addEventListener("click", e => {
   const h = e.target.closest(".head"); if (!h) return;
-  const item = h.parentElement, open = item.classList.toggle("open");
+  const open = h.parentElement.classList.toggle("open");
   h.setAttribute("aria-expanded", open);
 });
 
