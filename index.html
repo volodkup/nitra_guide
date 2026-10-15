@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nitra Student Guide</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  /* Colors follow the user's Telegram theme; fallbacks are used in a normal browser. */
+  :root {
+    --bg: var(--tg-theme-bg-color, #f6f7f4);
+    --surface: var(--tg-theme-secondary-bg-color, #ffffff);
+    --text: var(--tg-theme-text-color, #1b2420);
+    --muted: var(--tg-theme-hint-color, #6b7770);
+    --accent: var(--tg-theme-button-color, #1f7a5a);
+    --accent-text: var(--tg-theme-button-text-color, #ffffff);
+    --line: color-mix(in srgb, var(--text) 12%, transparent);
+    color-scheme: light dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; }
+  h1 { font-size: 1.7rem; line-height: 1.15; margin: 4px 0 4px; letter-spacing: -0.02em; }
+  .sub { color: var(--muted); margin: 0 0 18px; }
+
+  .search {
+    width: 100%; padding: 12px 14px; font: inherit; color: var(--text);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  }
+  .search:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .tabs { display: flex; gap: 8px; overflow-x: auto; padding: 14px 0 6px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: none; padding: 8px 14px; font: inherit; font-size: .92rem; cursor: pointer;
+    color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  }
+  .tab[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+
+  .list { margin-top: 10px; border-top: 1px solid var(--line); }
+  .item { border-bottom: 1px solid var(--line); }
+  .head {
+    width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 16px 2px; background: none; border: 0; font: inherit; color: var(--text);
+    text-align: left; cursor: pointer;
+  }
+  .head strong { font-weight: 600; }
+  .head small { display: block; color: var(--muted); font-size: .85rem; font-weight: 400; margin-top: 2px; }
+  .chev { flex: none; width: 10px; height: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+          transform: rotate(45deg); transition: transform .2s; }
+  .item.open .chev { transform: rotate(-135deg); }
+  .body { display: none; padding: 0 2px 18px; }
+  .item.open .body { display: block; }
+  .body ol { margin: 0 0 12px; padding-left: 20px; }
+  .body li { margin-bottom: 6px; }
+  .body a { color: var(--tg-theme-link-color, var(--accent)); }
+  .note { background: var(--surface); border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: .92rem; }
+  .empty { color: var(--muted); padding: 24px 2px; }
+  .foot { margin-top: 28px; color: var(--muted); font-size: .85rem; }
+  @media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Nitra student guide</h1>
+  <p class="sub">First steps for international students in Nitra.</p>
+
+  <input id="q" class="search" type="search" placeholder="Search: insurance, SIM, bus…" aria-label="Search the guide" autocomplete="off">
+  <div id="tabs" class="tabs" role="group" aria-label="Categories"></div>
+  <div id="list" class="list"></div>
+
+  <p class="foot">Made by a student for students. Found something outdated? Message the author in the chat.</p>
+</main>
+
+<script>
+/* ============ CONTENT: edit only this part ============
+   Everything below is a DRAFT. Check every fact and link before publishing.
+   Each article: category, title, summary, steps (list), note (optional), link (optional). */
+const CATEGORIES = ["Arrival", "Money", "Phone & internet", "Getting around", "Housing"];
+
+const ARTICLES = [
+  { cat: "Arrival", title: "Register your stay",
+    summary: "Required for most non-EU students after arrival.",
+    steps: [
+      "Check on the official Slovak police website whether you must register and how soon.",
+      "Collect your documents: passport, proof of accommodation, proof of study.",
+      "Book or visit the foreign police office responsible for Nitra.",
+      "Keep a copy of every document you submit."
+    ],
+    note: "TODO: add the exact office address, opening hours and the deadline." },
+
+  { cat: "Arrival", title: "Health insurance",
+    summary: "Know what covers you before you need a doctor.",
+    steps: [
+      "EU students: take your EHIC card or proof of coverage from home.",
+      "Non-EU students: check with the university which insurance is accepted.",
+      "Save the insurer's phone number and the nearest hospital in your phone."
+    ],
+    note: "TODO: add the insurer names students actually use and their prices." },
+
+  { cat: "Money", title: "Opening a bank account",
+    summary: "Useful for rent, SIM top-ups and avoiding fees.",
+    steps: [
+      "Compare two or three banks: fees, English support, student accounts.",
+      "Bring passport, proof of address and student confirmation.",
+      "Ask whether you can set up the mobile app in English."
+    ],
+    note: "TODO: add which banks have branches in Nitra and what students recommend." },
+
+  { cat: "Money", title: "Student discounts",
+    summary: "Where your student card saves money.",
+    steps: [
+      "Get your student card from the university as early as possible.",
+      "Ask for a student discount at transport, cinemas and museums."
+    ] },
+
+  { cat: "Phone & internet", title: "Getting a SIM card",
+    summary: "Prepaid is the simplest option for the first months.",
+    steps: [
+      "Compare prepaid offers from the main Slovak operators.",
+      "Buy a SIM at an operator store or a shop; bring your passport.",
+      "Check data limits and whether roaming in the EU is included."
+    ],
+    note: "TODO: add current operators, prices and the best student plan." },
+
+  { cat: "Getting around", title: "City buses in Nitra",
+    summary: "How to pay and where to find the timetable.",
+    steps: [
+      "Find the city transport timetable and route map online.",
+      "Check where to buy tickets and whether a student pass exists.",
+      "Validate your ticket when you board."
+    ],
+    note: "TODO: add the transport company name, ticket prices and the app, if there is one." },
+
+  { cat: "Getting around", title: "Trips to Bratislava and Vienna",
+    summary: "Train and bus options from Nitra.",
+    steps: [
+      "Use a journey planner to compare train and bus times.",
+      "Look for student discounts on long-distance tickets.",
+      "Buy ahead online when the route is busy."
+    ] },
+
+  { cat: "Housing", title: "Finding a room",
+    summary: "Dorm, shared flat or your own place.",
+    steps: [
+      "Ask the university about dorm applications and deadlines.",
+      "Check the student groups for room offers and flatmate searches.",
+      "Never pay a deposit before seeing the place and signing a contract."
+    ],
+    note: "TODO: add dorm names, prices and typical rent in Nitra." }
+];
+/* ============ END OF CONTENT ============ */
+
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+const $ = id => document.getElementById(id);
+let activeCat = "All", query = "";
+
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function renderTabs() {
+  $("tabs").innerHTML = ["All", ...CATEGORIES].map(c =>
+    `<button class="tab" data-cat="${esc(c)}" aria-pressed="${c === activeCat}">${esc(c)}</button>`).join("");
+}
+
+function renderList() {
+  const q = query.trim().toLowerCase();
+  const items = ARTICLES.filter(a =>
+    (activeCat === "All" || a.cat === activeCat) &&
+    (!q || (a.title + " " + a.summary + " " + a.steps.join(" ")).toLowerCase().includes(q)));
+  $("list").innerHTML = items.length ? items.map((a, i) => `
+    <div class="item" data-i="${i}">
+      <button class="head" aria-expanded="false">
+        <span><strong>${esc(a.title)}</strong><small>${esc(a.summary)}</small></span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="body">
+        <ol>${a.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
+        ${a.note ? `<div class="note">${esc(a.note)}</div>` : ""}
+        ${a.link ? `<p><a href="${esc(a.link)}" target="_blank" rel="noopener">Official page</a></p>` : ""}
+      </div>
+    </div>`).join("") : `<p class="empty">Nothing found for “${esc(query)}”. Try another word or pick All.</p>`;
+}
+
+$("tabs").addEventListener("click", e => {
+  const b = e.target.closest(".tab"); if (!b) return;
+  activeCat = b.dataset.cat; renderTabs(); renderList();
+});
+$("q").addEventListener("input", e => { query = e.target.value; renderList(); });
+$("list").addEventListener("click", e => {
+  const h = e.target.closest(".head"); if (!h) return;
+  const item = h.parentElement, open = item.classList.toggle("open");
+  h.setAttribute("aria-expanded", open);
+});
+
+renderTabs(); renderList();
+</script>
+</body>
+</html>
